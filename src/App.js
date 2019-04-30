@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link,Redirect} from "react-router-dom";
 import {Button,Form,Checkbox} from "semantic-ui-react"
 import Insert from './Insert'
 import './App.css';
@@ -13,7 +13,9 @@ function App() {
         <Route exact path="/" component={Home} />
         <Route path="/about" component={About} />
         <Route path="/topics" component={Topics} />
+        
         <Route path="/insert" component={Insert} />
+        <Route path="/update" component={Insert} />
       </div>
     </Router>
   );
@@ -70,6 +72,9 @@ function Header() {
       </li>
       <li>
         <Link to="/insert">Insert</Link>
+      </li>
+      <li>
+        <Link to="/update">Update</Link>
       </li>
     </ul>
   );
