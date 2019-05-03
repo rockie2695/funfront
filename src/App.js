@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link, Redirect, Switch } from "react-router-dom";
 import Insert from './Insert'
-import './App.css';
 import 'semantic-ui-css/semantic.min.css'
 function App() {
   return (
