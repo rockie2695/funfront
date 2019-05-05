@@ -12,7 +12,6 @@ class Character extends Component {
             characters: [{ _id: 123, name: 777, lv: 0, mana: 0, blood: 0, phy: 0, soul: 0, time: 0, magic: 0 }]
         }
         this.delete = this.delete.bind(this)
-        this.update = this.update.bind(this)
     }
     componentDidMount() {
         this._isMounted = true;
@@ -83,9 +82,7 @@ class Character extends Component {
                 alert(error)
             })
     }
-    update() {
-        console.log("a")
-    }
+    
     render() {
         return (<div>
             <Table attached celled selectable>
