@@ -82,7 +82,7 @@ class Character extends Component {
                 alert(error)
             })
     }
-    
+
     render() {
         return (<div>
             <Table attached celled selectable>
@@ -105,10 +105,10 @@ class Character extends Component {
                 <Table.Body>
                     {this.state.characters.map((character) =>
                         <EachCharacter key={character._id}
-                            value={character} delete={this.delete} update={this.update} />
+                            value={character} delete={this.delete}/>
                     )}
                 </Table.Body>
-                
+
             </Table>
 
             <Form className={this.state.inputLoading}>

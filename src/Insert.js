@@ -10,7 +10,6 @@ class Insert extends Component {
   }
   
   render() {
-    console.log(this.props.location.pathname, `${this.props.match.url}/character`)
     return (
       <div>
         <Button.Group widths='2'>
