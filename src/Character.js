@@ -9,7 +9,7 @@ class Character extends Component {
             inputLoading: null,
             deleteLoading: null,
             text: "",
-            characters: [{ _id: 123, name: 777, lv: 0, mana: 0, blood: 0, phy: 0, soul: 0, time: 0, magic: 0 }]
+            characters: [{ _id: 123, name: 777, lv: 0, mana: 0, blood: 0, phy: 0, soul: 0, time: 0, magic: 0, updateCancelHide: "hide", editHide: null, }]
         }
         this.delete = this.delete.bind(this)
     }
@@ -105,7 +105,7 @@ class Character extends Component {
                 <Table.Body>
                     {this.state.characters.map((character) =>
                         <EachCharacter key={character._id}
-                            value={character} delete={this.delete}/>
+                            value={character} delete={this.delete} />
                     )}
                 </Table.Body>
 
