@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Form, Container, Segment, List, Table } from "semantic-ui-react"
 import EachCharacter from "./EachCharacter"
 import className from "classnames"
+var host='http://localhost:8080'
 class Character extends Component {
     _isMounted = false;
     constructor(props) {
@@ -32,7 +33,7 @@ class Character extends Component {
     changeToLoad() {
         if (this.state.text !== "") {
             this.setState({ inputLoading: "loading" })
-            fetch('http://localhost:8080/insert/character', {
+            fetch(host+'/insert/character', {
                 method: 'post',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -91,7 +92,7 @@ class Character extends Component {
             soul: updateCharacter.soul
         }
         let whereCon = { "_id": updateCharacter._id }
-        fetch('http://localhost:8080/update/character', {
+        fetch(host+'/update/character', {
             method: 'post',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -121,7 +122,7 @@ class Character extends Component {
             })
     }
     delete(_id) {
-        fetch('http://localhost:8080/delete/character', {
+        fetch(host+'/delete/character', {
             method: 'post',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
