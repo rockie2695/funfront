@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Table } from "semantic-ui-react"
 import "./EachCharacter.css"
+import classNames from 'classnames'
 class EachCharacter extends Component {
     constructor(props) {
         super(props);
@@ -20,6 +21,10 @@ class EachCharacter extends Component {
         this.setState({ lv: this.props.value.lv, blood: this.props.value.blood, mana: this.props.value.mana, phy: this.props.value.phy, magic: this.props.value.magic, soul: this.props.value.soul })
     }
     render() {
+        var updateButtonClasses = classNames({
+            'hide': this.props.value.updateCancelHide === "hide",
+            'loading': this.props.value.updateLoading === "loading"
+        });
         let usept = this.props.value.blood + this.props.value.mana + this.props.value.phy + this.props.value.magic + this.props.value.soul
         let nonusept = this.state.maxpt - usept
         return (
@@ -60,7 +65,8 @@ class EachCharacter extends Component {
                 <Table.Cell>{new Date(this.props.value.time).toLocaleString()}</Table.Cell>
                 <Table.Cell>
                     <Button onClick={() => { this.props.edit(this.props.value._id) }} className={this.props.value.editHide}>Edit</Button>
-                    <Button onClick={() => { this.props.update({ _id: this.props.value._id, lv: this.state.lv, blood: this.state.blood, mana: this.state.mana, phy: this.state.phy, magic: this.state.magic, soul: this.state.soul }) }} className={`${this.props.value.updateCancelHide} ${this.props.value.updateLoading}`}>Update</Button>
+                    <Button onClick={() => { this.props.update({ _id: this.props.value._id, lv: this.state.lv, blood: this.state.blood, mana: this.state.mana, phy: this.state.phy, magic: this.state.magic, soul: this.state.soul }) }}
+                        className={updateButtonClasses}>Update</Button>
                     <Button onClick={() => { this.props.cancelUpdate(this.props.value._id); this.cancelUpdate(); }} className={this.props.value.updateCancelHide}>Cancel</Button>
                 </Table.Cell>
                 <Table.Cell><Button className={this.state.deleteLoading} onClick={() => { this.setState({ deleteLoading: "loading " }); this.props.delete(this.props.value._id) }}>Delete</Button></Table.Cell>

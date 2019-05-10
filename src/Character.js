@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Form, Container, Segment, List, Table } from "semantic-ui-react"
+import { Button, Form, Container, Segment, List, Table, Divider, Header } from "semantic-ui-react"
 import EachCharacter from "./EachCharacter"
-import className from "classnames"
-var host='http://localhost:8080'
+var host = 'http://localhost:8088'
 class Character extends Component {
     _isMounted = false;
     constructor(props) {
@@ -18,9 +17,11 @@ class Character extends Component {
         this.edit = this.edit.bind(this)
         this.update = this.update.bind(this)
         this.cancelUpdate = this.cancelUpdate.bind(this)
+        this.find = this.find.bind(this)
     }
     componentDidMount() {
         this._isMounted = true;
+        this.find()
     }
     componentWillUnmount() {
         this._isMounted = false;
@@ -33,7 +34,7 @@ class Character extends Component {
     changeToLoad() {
         if (this.state.text !== "") {
             this.setState({ inputLoading: "loading" })
-            fetch(host+'/insert/character', {
+            fetch(host + '/insert/character', {
                 method: 'post',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -92,7 +93,7 @@ class Character extends Component {
             soul: updateCharacter.soul
         }
         let whereCon = { "_id": updateCharacter._id }
-        fetch(host+'/update/character', {
+        fetch(host + '/update/character', {
             method: 'post',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -117,12 +118,14 @@ class Character extends Component {
                     alert("unknow error")
                 }
             }, (error) => {
-                console.log(error)
-                alert(error)
+                if (this._isMounted) {
+                    console.log(error)
+                    alert(error)
+                }
             })
     }
     delete(_id) {
-        fetch(host+'/delete/character', {
+        fetch(host + '/delete/character', {
             method: 'post',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -142,13 +145,48 @@ class Character extends Component {
                     }
                 }
             }, (error) => {
-                console.log(error)
-                alert(error)
+                if (this._isMounted) {
+                    console.log(error)
+                    alert(error)
+                }
             })
     }
-
+    find() {
+        fetch(host + '/find/character', {
+            method: 'get',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(res => res.json())
+            .then((result) => {
+                if (this._isMounted) {
+                    if (typeof result.ok != "undefined") {
+                        let obj2 = { updateCancelHide: "hide", editHide: null, updateLoading: null }
+                        var addClassDetect = function (element, index, array) {
+                            return { ...element, ...obj2 }
+                        };
+                        result.ok = result.ok.map(addClassDetect);
+                        this.setState(prevState => ({ characters: [...result.ok, ...prevState.characters,] }))
+                    } else if (typeof result.error != "undefined") {
+                        console.log(result.error)
+                        alert(result.error)
+                    } else {
+                        alert("unknow error")
+                    }
+                }
+            }, (error) => {
+                if (this._isMounted) {
+                    console.log(error)
+                    alert(error)
+                }
+            })
+    }
     render() {
         return (<div>
+            <Divider horizontal>
+                <Header as='h4'>
+                    Table
+                </Header>
+            </Divider>
             <Table attached celled selectable>
                 <Table.Header>
                     <Table.Row>
@@ -174,7 +212,11 @@ class Character extends Component {
                 </Table.Body>
 
             </Table>
-
+            <Divider horizontal>
+                <Header as='h4'>
+                    Add
+                </Header>
+            </Divider>
             <Form className={this.state.inputLoading}>
                 <Form.Field>
                     <label>Name</label>

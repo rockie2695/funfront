@@ -12,10 +12,19 @@ class Insert extends Component {
   render() {
     return (
       <div>
-        <Button.Group widths='2'>
+        <Button.Group widths='4'>
           <Button onClick={
             () => { if (this.props.location.pathname !== `${this.props.match.url}/character`) { this.props.history.push(`${this.props.match.url}/character`) } }}
           >character</Button>
+          <Button.Or text='' />
+          <Button onClick={
+            () => { if (this.props.location.pathname !== `${this.props.match.url}/skill`) { this.props.history.push(`${this.props.match.url}/skill`) } }}
+          >skill</Button>
+          <Button.Or text='' />
+          <Button onClick={
+            () => { if (this.props.location.pathname !== `${this.props.match.url}/character`) { this.props.history.push(`${this.props.match.url}/character`) } }}
+          >character</Button>
+          <Button.Or text='' />
           <Button onClick={
             () => { if (this.props.location.pathname !== `${this.props.match.url}/skill`) { this.props.history.push(`${this.props.match.url}/skill`) } }}
           >skill</Button>
