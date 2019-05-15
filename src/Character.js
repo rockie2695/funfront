@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, Container, Segment, List, Table, Divider, Header } from "semantic-ui-react"
+import { Button, Form, Container, Segment, List, Table, Divider, Header, Placeholder } from "semantic-ui-react"
 import EachCharacter from "./EachCharacter"
 var host = 'http://localhost:8088'
 class Character extends Component {
@@ -10,7 +10,9 @@ class Character extends Component {
             inputLoading: null,
             deleteLoading: null,
             text: "",
-            characters: [{ _id: 123, name: 777, lv: 0, mana: 0, blood: 0, phy: 0, soul: 0, time: 0, magic: 0, updateCancelHide: "hide", editHide: null, updateLoading: null }]
+            characters: [],
+            findLoading: null,
+            nonehide: "hide"
         }
         this.changeText = this.changeText.bind(this)
         this.delete = this.delete.bind(this)
@@ -165,7 +167,10 @@ class Character extends Component {
                             return { ...element, ...obj2 }
                         };
                         result.ok = result.ok.map(addClassDetect);
-                        this.setState(prevState => ({ characters: [...result.ok, ...prevState.characters,] }))
+                        this.setState(prevState => ({ characters: [...result.ok, ...prevState.characters], findLoading: "hide" }))
+                        if (result.ok.length === 0) {
+                            this.setState({ nonehide: null })
+                        }
                     } else if (typeof result.error != "undefined") {
                         console.log(result.error)
                         alert(result.error)
@@ -187,7 +192,7 @@ class Character extends Component {
                     Table
                 </Header>
             </Divider>
-            <Table attached celled selectable>
+            <Table attached='top' celled selectable>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell>Name</Table.HeaderCell>
@@ -212,6 +217,23 @@ class Character extends Component {
                 </Table.Body>
 
             </Table>
+
+            <Table attached selectable className={this.state.nonehide}>
+                <Table.Body>
+                    <Table.Row>
+                        <Table.Cell>None</Table.Cell>
+                    </Table.Row>
+                </Table.Body>
+            </Table>
+
+            <Table attached selectable className={this.state.findLoading}>
+                <Table.Body>
+                    <Table.Row>
+                        <Table.Cell><Placeholder style={{ backgroundColor: "undefined" }} fluid><Placeholder.Line style={{ backgroundColor: "rgba(0,0,0,0)" }} /></Placeholder></Table.Cell>
+                    </Table.Row>
+                </Table.Body>
+            </Table>
+
             <Divider horizontal>
                 <Header as='h4'>
                     Add
