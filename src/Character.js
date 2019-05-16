@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, Container, Segment, List, Table, Divider, Header, Placeholder } from "semantic-ui-react"
+import { Button, Form, Table, Divider, Header, Placeholder, Segment } from "semantic-ui-react"
 import EachCharacter from "./EachCharacter"
 var host = 'http://localhost:8088'
 class Character extends Component {
@@ -33,7 +33,7 @@ class Character extends Component {
             this.setState({ text: event.target.value })
         }
     }
-    changeToLoad() {
+    insert() {
         if (this.state.text !== "") {
             this.setState({ inputLoading: "loading" })
             fetch(host + '/insert/character', {
@@ -60,11 +60,13 @@ class Character extends Component {
                         }
                     }
                 }, (error) => {
-                    console.log(error)
-                    alert(error)
+                    if (this._isMounted) {
+                        console.log(error)
+                        alert(error)
+                    }
                 }).then(() => {
                     if (this._isMounted) {
-                        this.setState({ inputLoading: null })
+                        this.setState({ inputLoading: null, nonehide: "hide" })
                     }
                 });
         }
@@ -78,7 +80,7 @@ class Character extends Component {
     cancelUpdate(_id) {
         this.setState(prev => ({
             characters: prev.characters.map(character => character._id === _id
-                ? { ...character, updateCancelHide: "hide", editHide: null/*, lv: character.lv, blood: character.blood, mana: character.mana, phy: character.phy, magic: character.magic, soul: character.soul */ } : character)
+                ? { ...character, updateCancelHide: "hide", editHide: null } : character)
         }))
     }
     update(updateCharacter) {
@@ -151,7 +153,13 @@ class Character extends Component {
                     console.log(error)
                     alert(error)
                 }
-            })
+            }).then(() => {
+                if (this._isMounted) {
+                    if (this.state.characters.length === 0) {
+                        this.setState({ nonehide: null })
+                    }
+                }
+            });
     }
     find() {
         fetch(host + '/find/character', {
@@ -173,7 +181,7 @@ class Character extends Component {
                         }
                     } else if (typeof result.error != "undefined") {
                         console.log(result.error)
-                        alert(result.error)
+                        alert(result.error.name + ":" + result.error.errorLabels)
                     } else {
                         alert("unknow error")
                     }
@@ -181,75 +189,97 @@ class Character extends Component {
             }, (error) => {
                 if (this._isMounted) {
                     console.log(error)
-                    alert(error)
                 }
             })
     }
     render() {
         return (<div>
-            <Divider horizontal>
-                <Header as='h4'>
-                    Table
+            <Header as='h2' textAlign='center' style={{ marginTop: "10px" }}>
+                Character
+            </Header>
+            <Segment>
+                <Divider horizontal>
+                    <Header as='h3'>
+                        Table
                 </Header>
-            </Divider>
-            <Table attached='top' celled selectable>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell>Name</Table.HeaderCell>
-                        <Table.HeaderCell>LV</Table.HeaderCell>
-                        <Table.HeaderCell>NonUse pt</Table.HeaderCell>
-                        <Table.HeaderCell>Use pt</Table.HeaderCell>
-                        <Table.HeaderCell>blood</Table.HeaderCell>
-                        <Table.HeaderCell>mana</Table.HeaderCell>
-                        <Table.HeaderCell>phy</Table.HeaderCell>
-                        <Table.HeaderCell>magic</Table.HeaderCell>
-                        <Table.HeaderCell>soul</Table.HeaderCell>
-                        <Table.HeaderCell>DateTime</Table.HeaderCell>
-                        <Table.HeaderCell>Edit</Table.HeaderCell>
-                        <Table.HeaderCell>Delete</Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {this.state.characters.map((character) =>
-                        <EachCharacter key={character._id}
-                            value={character} delete={this.delete} update={this.update} edit={this.edit} cancelUpdate={this.cancelUpdate} />
-                    )}
-                </Table.Body>
+                </Divider>
+                <Table attached='top' celled selectable>
+                    <CharTableHeader />
+                    <Table.Body>
+                        {this.state.characters.map((character) =>
+                            <EachCharacter key={character._id}
+                                value={character} delete={this.delete} update={this.update} edit={this.edit} cancelUpdate={this.cancelUpdate} />
+                        )}
+                    </Table.Body>
 
-            </Table>
+                </Table>
 
-            <Table attached selectable className={this.state.nonehide}>
-                <Table.Body>
-                    <Table.Row>
-                        <Table.Cell>None</Table.Cell>
-                    </Table.Row>
-                </Table.Body>
-            </Table>
+                <NoneTable nonehide={this.state.nonehide} />
 
-            <Table attached selectable className={this.state.findLoading}>
-                <Table.Body>
-                    <Table.Row>
-                        <Table.Cell><Placeholder style={{ backgroundColor: "undefined" }} fluid><Placeholder.Line style={{ backgroundColor: "rgba(0,0,0,0)" }} /></Placeholder></Table.Cell>
-                    </Table.Row>
-                </Table.Body>
-            </Table>
+                <FindLoadTable findLoading={this.state.findLoading} />
+            </Segment>
 
-            <Divider horizontal>
-                <Header as='h4'>
-                    Add
+            <Segment>
+                <Divider horizontal>
+                    <Header as='h3'>
+                        Add
                 </Header>
-            </Divider>
-            <Form className={this.state.inputLoading}>
-                <Form.Field>
-                    <label>Name</label>
-                    <input placeholder='Name' required value={this.state.text} onChange={this.changeText} />
-                </Form.Field>
-                <Button type='submit' onClick={() => { this.changeToLoad() }}>Submit</Button>
-            </Form>
+                </Divider>
+                <Form className={this.state.inputLoading}>
+                    <Form.Field>
+                        <label>Name</label>
+                        <input placeholder='Name' required value={this.state.text} onChange={this.changeText} />
+                    </Form.Field>
+                    <Button type='submit' onClick={() => { this.insert() }}>Submit</Button>
+                </Form>
+            </Segment>
         </div>
         )
-
     }
 }
 
+function CharTableHeader() {
+    return (
+        <Table.Header>
+            <Table.Row>
+                <Table.HeaderCell>Name</Table.HeaderCell>
+                <Table.HeaderCell>LV</Table.HeaderCell>
+                <Table.HeaderCell>NonUse pt</Table.HeaderCell>
+                <Table.HeaderCell>Use pt</Table.HeaderCell>
+                <Table.HeaderCell>blood</Table.HeaderCell>
+                <Table.HeaderCell>mana</Table.HeaderCell>
+                <Table.HeaderCell>phy</Table.HeaderCell>
+                <Table.HeaderCell>magic</Table.HeaderCell>
+                <Table.HeaderCell>soul</Table.HeaderCell>
+                <Table.HeaderCell>DateTime</Table.HeaderCell>
+                <Table.HeaderCell>Edit</Table.HeaderCell>
+                <Table.HeaderCell>Delete</Table.HeaderCell>
+            </Table.Row>
+        </Table.Header>
+    )
+}
+
+function FindLoadTable(props) {
+    return (
+        <Table attached selectable className={props.findLoading}>
+            <Table.Body>
+                <Table.Row>
+                    <Table.Cell><Placeholder style={{ backgroundColor: "undefined" }} fluid><Placeholder.Line style={{ backgroundColor: "rgba(0,0,0,0)" }} /></Placeholder></Table.Cell>
+                </Table.Row>
+            </Table.Body>
+        </Table>
+    )
+}
+
+function NoneTable(props) {
+    return (
+        <Table attached selectable className={props.nonehide}>
+            <Table.Body>
+                <Table.Row>
+                    <Table.Cell>None</Table.Cell>
+                </Table.Row>
+            </Table.Body>
+        </Table>
+    )
+}
 export default Character;

@@ -6,8 +6,6 @@ class EachCharacter extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            raised: null,
-            maxpt: this.props.value.lv * 3,
             deleteLoading: null,
             lv: this.props.value.lv,
             blood: this.props.value.blood,
@@ -25,8 +23,8 @@ class EachCharacter extends Component {
             'hide': this.props.value.updateCancelHide === "hide",
             'loading': this.props.value.updateLoading === "loading"
         });
-        let usept = this.props.value.blood + this.props.value.mana + this.props.value.phy + this.props.value.magic + this.props.value.soul
-        let nonusept = this.state.maxpt - usept
+        let usept = this.state.blood + this.state.mana + this.state.phy + this.state.magic + this.state.soul
+        let nonusept = this.state.lv * 3 - usept
         return (
             <Table.Row>
                 <Table.Cell>{this.props.value.name}</Table.Cell>
@@ -38,29 +36,29 @@ class EachCharacter extends Component {
                 <Table.Cell>{nonusept}</Table.Cell>
                 <Table.Cell>{usept}</Table.Cell>
                 <Table.Cell>
-                    <div><Button icon="up arrow" className={this.props.value.updateCancelHide} onClick={() => { this.setState(prevState => ({ blood: prevState.blood + 1 })) }} /></div>
+                    <div><Button icon="up arrow" className={this.props.value.updateCancelHide} onClick={() => { if (nonusept > 0) { this.setState(prevState => ({ blood: prevState.blood + 1 })) } }} /></div>
                     <div>{this.state.blood}</div>
-                    <div><Button icon="down arrow" className={this.props.value.updateCancelHide} onClick={() => { this.setState(prevState => ({ blood: prevState.blood - 1 })) }} /></div>
+                    <div><Button icon="down arrow" className={this.props.value.updateCancelHide} onClick={() => { if (this.state.blood > 0) { this.setState(prevState => ({ blood: prevState.blood - 1 })) } }} /></div>
                 </Table.Cell>
                 <Table.Cell>
-                    <div><Button icon="up arrow" className={this.props.value.updateCancelHide} onClick={() => { this.setState(prevState => ({ mana: prevState.mana + 1 })) }} /></div>
+                    <div><Button icon="up arrow" className={this.props.value.updateCancelHide} onClick={() => { if (nonusept > 0) { this.setState(prevState => ({ mana: prevState.mana + 1 })) } }} /></div>
                     <div>{this.state.mana}</div>
-                    <div><Button icon="down arrow" className={this.props.value.updateCancelHide} onClick={() => { this.setState(prevState => ({ mana: prevState.mana - 1 })) }} /></div>
+                    <div><Button icon="down arrow" className={this.props.value.updateCancelHide} onClick={() => { if (this.state.mana > 0) {this.setState(prevState => ({ mana: prevState.mana - 1 })) }} }/></div>
                 </Table.Cell>
                 <Table.Cell>
-                    <div><Button icon="up arrow" className={this.props.value.updateCancelHide} onClick={() => { this.setState(prevState => ({ phy: prevState.phy + 1 })) }} /></div>
+                    <div><Button icon="up arrow" className={this.props.value.updateCancelHide} onClick={() => { if (nonusept > 0) { this.setState(prevState => ({ phy: prevState.phy + 1 })) } }} /></div>
                     <div>{this.state.phy}</div>
-                    <div><Button icon="down arrow" className={this.props.value.updateCancelHide} onClick={() => { this.setState(prevState => ({ phy: prevState.phy - 1 })) }} /></div>
+                    <div><Button icon="down arrow" className={this.props.value.updateCancelHide} onClick={() => { if (this.state.phy > 0) {this.setState(prevState => ({ phy: prevState.phy - 1 })) }} }/></div>
                 </Table.Cell>
                 <Table.Cell>
-                    <div><Button icon="up arrow" className={this.props.value.updateCancelHide} onClick={() => { this.setState(prevState => ({ magic: prevState.magic + 1 })) }} /></div>
+                    <div><Button icon="up arrow" className={this.props.value.updateCancelHide} onClick={() => { if (nonusept > 0) { this.setState(prevState => ({ magic: prevState.magic + 1 })) } }} /></div>
                     <div>{this.state.magic}</div>
-                    <div><Button icon="down arrow" className={this.props.value.updateCancelHide} onClick={() => { this.setState(prevState => ({ magic: prevState.magic - 1 })) }} /></div>
+                    <div><Button icon="down arrow" className={this.props.value.updateCancelHide} onClick={() => { if (this.state.magic > 0) {this.setState(prevState => ({ magic: prevState.magic - 1 })) }} }/></div>
                 </Table.Cell>
                 <Table.Cell>
-                    <div><Button icon="up arrow" className={this.props.value.updateCancelHide} onClick={() => { this.setState(prevState => ({ soul: prevState.soul + 1 })) }} /></div>
+                    <div><Button icon="up arrow" className={this.props.value.updateCancelHide} onClick={() => { if (nonusept > 0) { this.setState(prevState => ({ soul: prevState.soul + 1 })) } }} /></div>
                     <div>{this.state.soul}</div>
-                    <div><Button icon="down arrow" className={this.props.value.updateCancelHide} onClick={() => { this.setState(prevState => ({ soul: prevState.soul - 1 })) }} /></div>
+                    <div><Button icon="down arrow" className={this.props.value.updateCancelHide} onClick={() => { if (this.state.soul > 0) {this.setState(prevState => ({ soul: prevState.soul - 1 })) }} }/></div>
                 </Table.Cell>
                 <Table.Cell>{new Date(this.props.value.time).toLocaleString()}</Table.Cell>
                 <Table.Cell>

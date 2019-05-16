@@ -2,20 +2,24 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Link, Redirect, Switch } from "react-router-dom";
 import Insert from './Insert'
 import 'semantic-ui-css/semantic.min.css'
+import { Segment } from 'semantic-ui-react';
 function App() {
   return (
     <Router>
       <div>
         <Header />
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/about" component={About} />
-          <Route path="/topics" component={Topics} />
+        <Segment>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/about" component={About} />
+            <Route path="/topics" component={Topics} />
 
-          <Route path="/insert" component={Insert} />
-          <Route path="/update" component={Insert} />
-          <Redirect to="/" />
-        </Switch>
+            <Route path="/insert" component={Insert} />
+            <Route path="/update" component={Insert} />
+            <Redirect to="/" />
+          </Switch>
+        </Segment>
+
 
       </div>
     </Router>
