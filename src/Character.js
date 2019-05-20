@@ -211,7 +211,6 @@ class Character extends Component {
                                 value={character} delete={this.delete} update={this.update} edit={this.edit} cancelUpdate={this.cancelUpdate} />
                         )}
                     </Table.Body>
-
                 </Table>
 
                 <NoneTable nonehide={this.state.nonehide} />
@@ -237,7 +236,6 @@ class Character extends Component {
         )
     }
 }
-
 function CharTableHeader() {
     return (
         <Table.Header>
@@ -258,7 +256,6 @@ function CharTableHeader() {
         </Table.Header>
     )
 }
-
 function FindLoadTable(props) {
     return (
         <Table attached selectable className={props.findLoading}>
@@ -270,7 +267,6 @@ function FindLoadTable(props) {
         </Table>
     )
 }
-
 function NoneTable(props) {
     return (
         <Table attached selectable className={props.nonehide}>
